@@ -6,7 +6,7 @@
 /*   By: alsanche <alsanche@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 22:11:20 by alsanche          #+#    #+#             */
-/*   Updated: 2021/12/31 16:28:06 by alsanche         ###   ########.fr       */
+/*   Updated: 2022/01/10 17:34:40 by alsanche         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,10 @@
 # include <sys/wait.h>
 # include <errno.h>
 
-int main(int arc, char **arv);
+int		main(int arc, char **arv, char **empv);
+void	send_error(int n, char *str);
+void	ft_putstr(char *str);
+char	**find_path(char **enpv);
 
 
 #endif

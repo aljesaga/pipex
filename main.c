@@ -6,63 +6,101 @@
 /*   By: alsanche <alsanche@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/21 13:31:09 by alsanche          #+#    #+#             */
-/*   Updated: 2022/01/06 13:05:09 by alsanche         ###   ########.fr       */
+/*   Updated: 2022/01/10 17:33:11 by alsanche         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-int main(int arc, char **arv)
+void	ft_test(int fd, char *path, char **comand, char **enpv)
+{
+	dup2(fd, STDOUT_FILENO);
+	execve(path, comand, enpv);
+}
+
+void ft_romulo(int *fd, int file, char **comand, char **enpv)
+{
+	char	**path;
+	char	*gps;
+	int		i;
+
+	close(fd[FD_W]);
+	dup2(fd[FD_R], STDIN_FILENO);
+	path = find_path(enpv);
+	i = 0;
+	while(path[i])
+	{
+		gps = ft_strjoin(path[i], comand[0]);
+		if (!access(gps, R_OK))
+			ft_test(file, gps, comand, enpv);
+		free(gps);
+		i++;
+	}
+	close(file);
+	close(fd[FD_R]);
+}
+
+void ft_remo(int *fd, int file, char **comand, char **enpv)
+{
+	char	**path;
+	char	*gps;
+	int		i;
+
+	close(fd[FD_R]);
+	dup2(file, STDIN_FILENO);
+	close(file);
+	path = find_path(enpv);
+	i = 0;
+	while(path[i])
+	{
+		gps = ft_strjoin(path[i], comand[0]);
+		if (!access(gps, R_OK))
+			ft_test(fd[FD_W], gps, comand, enpv);
+		free(gps);
+		i++;
+	}
+	close(fd[FD_W]);
+	exit (0);
+}
+
+void pipex(int *file, char **arv, char **enpv)
 {
 	int		fd[2];
-	int		file;
-	pid_t	pid_c;
-	pid_t	pid_c2;
-	char	*ls[] = {"ls", "-la","/home/alsanche/pipex", 0};
-	char	*wc[] = {"wc", "-l", 0};
-	char	*enpv[] = {"PATH=/bin", 0};
+	char	**remo;
+	char	**romulo;
+	pid_t	child;
 
-	arv[1] = NULL;
-	if (arc >= 5)
+	remo = ft_split(arv[2], " ");
+	romulo = ft_split(arv[3], " ");
+	pipe(fd);
+	child = fork();
+	if (child == -1)
+			send_error(2, "fork");
+	if (child == 0)
+		ft_remo(fd, file[0], remo, enpv);
+	else
+		ft_romulo(fd, file[1], romulo, enpv);
+}
+
+int main(int arc, char **arv, char **enpv)
+{
+	int		file[2];
+
+	if (arc == 5)
 	{
-		pipe(fd);
-		pid_c = fork();
-		if (pid_c == 0)
+		file[0] = open(arv[1], O_RDONLY);
+		if (file[0] == -1)
 		{
-			close(fd[FD_R]);
-			dup2(fd[FD_W], STDOUT_FILENO);
-			close(fd[1]);
-			execve("usr/bin/ls", ls, enpv);
-			exit (0);
+			send_error(0, arv[1]);
+			return (0);
 		}
-		else
+		file[1] = open(arv[4], O_CREAT | O_WRONLY);
+		if (file[1] == -1)
 		{
-			close(fd[FD_W]);
-			pid_c2 = fork();
-			if (pid_c2 == 0)
-			{
-				file = open(arv[4], O_WRONLY);
-				dup2(fd[FD_R], STDIN_FILENO);
-				close(fd[FD_R]);
-				dup2(file, STDOUT_FILENO);
-				execve("usr/bin/wc", wc, enpv);
-				close(fd[1]);
-			}
-			else
-				close (fd[FD_R]);
+			send_error(0, arv[4]);
+			return (0);
 		}
+		pipex(file, arv, enpv);
 	}
 	return (0);
 }
-
-/*{
-	int	fd;
-
-	if (arg >= 5)
-	{
-		
-		fork()
-		
-	}
-	return (0);	
-}*/
