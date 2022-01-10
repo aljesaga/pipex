@@ -6,13 +6,13 @@
 #    By: alsanche <alsanche@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/27 16:00:21 by alsanche          #+#    #+#              #
-#    Updated: 2022/01/10 13:07:37 by alsanche         ###   ########lyon.fr    #
+#    Updated: 2022/01/10 18:09:23 by alsanche         ###   ########lyon.fr    #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = pipex
 
-SRCS = main.c send_error.c
+SRCS = main.c send_error.c pipex_utiles.c
 
 OBJS =  $(SRCS:%.c=%.o)
 
