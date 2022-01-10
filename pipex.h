@@ -6,7 +6,7 @@
 /*   By: alsanche <alsanche@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 22:11:20 by alsanche          #+#    #+#             */
-/*   Updated: 2022/01/10 17:34:40 by alsanche         ###   ########lyon.fr   */
+/*   Updated: 2022/01/10 18:00:36 by alsanche         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 # include <errno.h>
+# include "libft.a"
 
 int		main(int arc, char **arv, char **empv);
 void	send_error(int n, char *str);

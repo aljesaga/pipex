@@ -53,8 +53,7 @@ char *str_path(char **enpv)
 	i = 0;
 	while (enpv[i])
 	{
-		if (enpv[i][0] == "P" && enpv[i][1] == "A"
-			&& enpv[i][2] == "T" && enpv[i][3] == "H")
+		if (enpv[i][0] == "P" && enpv[i][1] == "A" && enpv[i][2] == "T" && enpv[i][3] == "H")
 			return (enpv[i]);
 		i++;
 	}
