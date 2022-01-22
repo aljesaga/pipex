@@ -41,36 +41,39 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	return (new);
 }
 
-void	ft_putstr(char *str)
+void	ft_free_all(char **str)
 {
 	int i;
 
 	i = 0;
-	while (str[i])
-	{
-		write(1, str[i], 1);
+	while(str[i])
 		i++;
+	while(str[i - 1])
+	{
+		free(str[i]);
+		i--;
 	}
+	free(str);
 }
 
 void	send_error(int n, char *str)
 {
 	if (n == 0)
 	{	
-		ft_putstr("zsh: permission denied: ");
-		ft_putstr(str);
+		ft_putstr_fd("zsh: permission denied: ", 1);
+		ft_putstr_fd(str, 1);
 		write(1, "\n", 1);
 	}
 	else if (n == 1)
 	{
-		ft_putstr(str);
-		ft_putstr("is invalid\n");
+		ft_putstr_fd(str, 1);
+		ft_putstr_fd(" is invalid\n", 1);
 		exit (-1);
 	}
 	else if  (n == 2)
 	{
-		ft_putstr(str);
-		ft_putstr("it doesn't work\n");
+		ft_putstr_fd(str, 1);
+		ft_putstr_fd("it doesn't work\n", 1);
 		exit (-1);
 	}
 }
@@ -82,7 +85,7 @@ char *str_path(char **enpv)
 	i = 0;
 	while (enpv[i])
 	{
-		if (enpv[i][0] == "P" && enpv[i][1] == "A" && enpv[i][2] == "T" && enpv[i][3] == "H")
+		if (enpv[i][0] == 'P' && enpv[i][1] == 'A' && enpv[i][2] == 'T' && enpv[i][3] == 'H')
 			return (enpv[i]);
 		i++;
 	}
@@ -100,7 +103,7 @@ char	**find_path(char **enpv)
 	if (!path)
 		send_error(1, "PATH");
 	i = -1;
-	gps = ft_split(path, ":");
+	gps = ft_split(path, ':');
 	while(gps[++i])
 	{
 		aux = gps[i];

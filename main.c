@@ -6,7 +6,7 @@
 /*   By: alsanche <alsanche@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/21 13:31:09 by alsanche          #+#    #+#             */
-/*   Updated: 2022/01/10 17:33:11 by alsanche         ###   ########lyon.fr   */
+/*   Updated: 2022/01/22 19:11:35 by alsanche         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,11 @@ void ft_romulo(int *fd, int file, char **comand, char **enpv)
 		free(gps);
 		i++;
 	}
+	send_error(1, comand[0]);
+	ft_free_all(path);
 	close(file);
 	close(fd[FD_R]);
+	exit (0);
 }
 
 void ft_remo(int *fd, int file, char **comand, char **enpv)
@@ -59,6 +62,8 @@ void ft_remo(int *fd, int file, char **comand, char **enpv)
 		free(gps);
 		i++;
 	}
+	send_error(1, comand[0]);
+	ft_free_all(path);
 	close(fd[FD_W]);
 	exit (0);
 }
@@ -70,8 +75,8 @@ void pipex(int *file, char **arv, char **enpv)
 	char	**romulo;
 	pid_t	child;
 
-	remo = ft_split(arv[2], " ");
-	romulo = ft_split(arv[3], " ");
+	remo = ft_split(arv[2], ' ');
+	romulo = ft_split(arv[3], ' ');
 	pipe(fd);
 	child = fork();
 	if (child == -1)
@@ -102,5 +107,7 @@ int main(int arc, char **arv, char **enpv)
 		}
 		pipex(file, arv, enpv);
 	}
+	else
+		send_error(2, "insufficient arguments ");
 	return (0);
 }
