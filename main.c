@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alsanche <alsanche@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alsanche <alsanche@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/21 13:31:09 by alsanche          #+#    #+#             */
-/*   Updated: 2022/01/22 19:11:35 by alsanche         ###   ########.fr       */
+/*   Updated: 2022/02/23 15:57:10 by alsanche         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	ft_test(int fd, char *path, char **comand, char **enpv)
 	execve(path, comand, enpv);
 }
 
-void ft_romulo(int *fd, int file, char **comand, char **enpv)
+void	ft_romulo(int *fd, int file, char **comand, char **enpv)
 {
 	char	**path;
 	char	*gps;
@@ -28,7 +28,7 @@ void ft_romulo(int *fd, int file, char **comand, char **enpv)
 	dup2(fd[FD_R], STDIN_FILENO);
 	path = find_path(enpv);
 	i = 0;
-	while(path[i])
+	while (path[i])
 	{
 		gps = ft_strjoin(path[i], comand[0]);
 		if (!access(gps, R_OK))
@@ -43,7 +43,7 @@ void ft_romulo(int *fd, int file, char **comand, char **enpv)
 	exit (0);
 }
 
-void ft_remo(int *fd, int file, char **comand, char **enpv)
+void	ft_remo(int *fd, int file, char **comand, char **enpv)
 {
 	char	**path;
 	char	*gps;
@@ -54,7 +54,7 @@ void ft_remo(int *fd, int file, char **comand, char **enpv)
 	close(file);
 	path = find_path(enpv);
 	i = 0;
-	while(path[i])
+	while (path[i])
 	{
 		gps = ft_strjoin(path[i], comand[0]);
 		if (!access(gps, R_OK))
@@ -68,7 +68,7 @@ void ft_remo(int *fd, int file, char **comand, char **enpv)
 	exit (0);
 }
 
-void pipex(int *file, char **arv, char **enpv)
+void	pipex(int *file, char **arv, char **enpv)
 {
 	int		fd[2];
 	char	**remo;
@@ -80,14 +80,14 @@ void pipex(int *file, char **arv, char **enpv)
 	pipe(fd);
 	child = fork();
 	if (child == -1)
-			send_error(2, "fork");
+		send_error(2, "fork");
 	if (child == 0)
 		ft_remo(fd, file[0], remo, enpv);
 	else
 		ft_romulo(fd, file[1], romulo, enpv);
 }
 
-int main(int arc, char **arv, char **enpv)
+int	main(int arc, char **arv, char **enpv)
 {
 	int		file[2];
 

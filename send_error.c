@@ -43,12 +43,12 @@ char	*ft_strjoin(char const *s1, char const *s2)
 
 void	ft_free_all(char **str)
 {
-	int i;
+	int	i;
 
 	i = 0;
-	while(str[i])
+	while (str[i])
 		i++;
-	while(str[i - 1])
+	while (str[i - 1])
 	{
 		free(str[i]);
 		i--;
@@ -70,7 +70,7 @@ void	send_error(int n, char *str)
 		ft_putstr_fd(" is invalid\n", 1);
 		exit (-1);
 	}
-	else if  (n == 2)
+	else if (n == 2)
 	{
 		ft_putstr_fd(str, 1);
 		ft_putstr_fd("it doesn't work\n", 1);
@@ -78,14 +78,15 @@ void	send_error(int n, char *str)
 	}
 }
 
-char *str_path(char **enpv)
+char	*str_path(char **enpv)
 {
 	int	i;
 
 	i = 0;
 	while (enpv[i])
 	{
-		if (enpv[i][0] == 'P' && enpv[i][1] == 'A' && enpv[i][2] == 'T' && enpv[i][3] == 'H')
+		if (enpv[i][0] == 'P' && enpv[i][1] == 'A'
+			&& enpv[i][2] == 'T' && enpv[i][3] == 'H')
 			return (enpv[i]);
 		i++;
 	}
@@ -104,7 +105,7 @@ char	**find_path(char **enpv)
 		send_error(1, "PATH");
 	i = -1;
 	gps = ft_split(path, ':');
-	while(gps[++i])
+	while (gps[++i])
 	{
 		aux = gps[i];
 		gps[i] = ft_strjoin(aux, "/");
