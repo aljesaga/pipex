@@ -6,7 +6,7 @@
 /*   By: alsanche <alsanche@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/21 13:31:09 by alsanche          #+#    #+#             */
-/*   Updated: 2022/02/23 15:57:10 by alsanche         ###   ########lyon.fr   */
+/*   Updated: 2022/02/25 21:10:25 by alsanche         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void	ft_romulo(int *fd, int file, char **comand, char **enpv)
 	ft_free_all(path);
 	close(file);
 	close(fd[FD_R]);
-	exit (0);
+	exit (-1);
 }
 
 void	ft_remo(int *fd, int file, char **comand, char **enpv)
@@ -65,7 +65,7 @@ void	ft_remo(int *fd, int file, char **comand, char **enpv)
 	send_error(1, comand[0]);
 	ft_free_all(path);
 	close(fd[FD_W]);
-	exit (0);
+	exit (-1);
 }
 
 void	pipex(int *file, char **arv, char **enpv)
@@ -84,7 +84,10 @@ void	pipex(int *file, char **arv, char **enpv)
 	if (child == 0)
 		ft_remo(fd, file[0], remo, enpv);
 	else
+	{
+		wait(&child);
 		ft_romulo(fd, file[1], romulo, enpv);
+	}
 }
 
 int	main(int arc, char **arv, char **enpv)
@@ -93,14 +96,14 @@ int	main(int arc, char **arv, char **enpv)
 
 	if (arc == 5)
 	{
-		file[0] = open(arv[1], O_RDONLY);
-		if (file[0] == -1)
+		file[0] = open(arv[1], O_RDONLY, 0644);
+		if (file[0] < 0)
 		{
 			send_error(0, arv[1]);
 			return (0);
 		}
-		file[1] = open(arv[4], O_CREAT | O_WRONLY);
-		if (file[1] == -1)
+		file[1] = open(arv[4], O_RDWR | O_CREAT | O_TRUNC, 0644);
+		if (file[1] < 0)
 		{
 			send_error(0, arv[4]);
 			return (0);
@@ -108,6 +111,6 @@ int	main(int arc, char **arv, char **enpv)
 		pipex(file, arv, enpv);
 	}
 	else
-		send_error(2, "insufficient arguments ");
+		send_error(2, "insufficient or too many arguments ");
 	return (0);
 }
