@@ -6,7 +6,7 @@
 #    By: alsanche <alsanche@student.42lyon.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/27 16:00:21 by alsanche          #+#    #+#              #
-#    Updated: 2022/02/25 21:04:11 by alsanche         ###   ########lyon.fr    #
+#    Updated: 2022/05/14 17:23:53 by alsanche         ###   ########lyon.fr    #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,14 +25,15 @@ CFLAGS = -Wall -Wextra -Werror
 all: $(NAME)
 
 $(NAME): $(OBJS)
-		make -sC ../Libft
-		$(CC) $^ -o $@ $(CFLAGS) $(DEBUG) ../Libft/libft.a
+		make -sC ./Libft
+		$(CC) $^ -o $@ $(CFLAGS) $(DEBUG) ./Libft/libft.a
 
 clean:
-		make fclean -C ../Libft
+		make clean -C ./Libft
 		rm -rf $(OBJS)
 
 fclean:
+		make fclean -C ./Libft
 		rm -f $(NAME)
 
 re: fclean all

@@ -6,7 +6,7 @@
 /*   By: alsanche <alsanche@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 22:11:20 by alsanche          #+#    #+#             */
-/*   Updated: 2022/02/23 16:07:07 by alsanche         ###   ########lyon.fr   */
+/*   Updated: 2022/05/14 17:19:03 by alsanche         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 # include <errno.h>
-# include "../Libft/libft.h"
+# include "./Libft/libft.h"
 
 /* main.c */
 
