@@ -6,13 +6,13 @@
 #    By: alsanche <alsanche@student.42lyon.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/27 16:00:21 by alsanche          #+#    #+#              #
-#    Updated: 2022/05/14 17:23:53 by alsanche         ###   ########lyon.fr    #
+#    Updated: 2022/05/14 19:08:02 by alsanche         ###   ########lyon.fr    #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = pipex
 
-SRCS = main.c send_error.c
+SRCS = main.c send_error.c ft_split.c pipex_utils.c
 
 OBJS =  $(SRCS:%.c=%.o)
 
@@ -25,15 +25,12 @@ CFLAGS = -Wall -Wextra -Werror
 all: $(NAME)
 
 $(NAME): $(OBJS)
-		make -sC ./Libft
-		$(CC) $^ -o $@ $(CFLAGS) $(DEBUG) ./Libft/libft.a
+		$(CC) $^ -o $@ $(CFLAGS) $(DEBUG)
 
 clean:
-		make clean -C ./Libft
 		rm -rf $(OBJS)
 
 fclean:
-		make fclean -C ./Libft
 		rm -f $(NAME)
 
 re: fclean all

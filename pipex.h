@@ -6,7 +6,7 @@
 /*   By: alsanche <alsanche@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 22:11:20 by alsanche          #+#    #+#             */
-/*   Updated: 2022/05/14 17:19:03 by alsanche         ###   ########lyon.fr   */
+/*   Updated: 2022/05/14 19:06:46 by alsanche         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 # include <errno.h>
-# include "./Libft/libft.h"
 
 /* main.c */
 
@@ -41,5 +40,14 @@ void	ft_free_all(char **str);
 void	send_error(int n, char *str);
 char	*str_path(char **enpv);
 char	**find_path(char **enpv);
+
+/* split.c */
+
+char	**ft_split(char const *s, char c);
+
+/* pipex_utils.c */
+
+size_t	ft_strlen(const char *c);
+void	ft_putstr_fd(char *s, int fd);
 
 #endif

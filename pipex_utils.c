@@ -1,25 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstnew.c                                        :+:      :+:    :+:   */
+/*   pipex_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alsanche <alsanche@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alsanche <alsanche@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/08/27 16:02:00 by alsanche          #+#    #+#             */
-/*   Updated: 2021/08/29 20:35:15 by alsanche         ###   ########.fr       */
+/*   Created: 2022/05/14 18:44:01 by alsanche          #+#    #+#             */
+/*   Updated: 2022/05/14 19:05:01 by alsanche         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "pipex.h"
 
-t_list	*ft_lstnew(void *content)
+size_t	ft_strlen(const char *c)
 {
-	t_list	*lstnew;
+	int	i;
 
-	lstnew = (t_list *)malloc(sizeof(t_list));
-	if (!lstnew)
-		return (0);
-	lstnew->content = content;
-	lstnew->next = NULL;
-	return (lstnew);
+	i = 0;
+	while (c[i])
+	{
+		i++;
+	}
+	return (i);
+}
+
+void	ft_putstr_fd(char *s, int fd)
+{
+	int		i;
+
+	i = 0;
+	if (!fd || !s)
+		return ;
+	while (s[i])
+	{
+		write(fd, &s[i], 1);
+		i++;
+	}
 }
