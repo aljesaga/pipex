@@ -66,14 +66,21 @@ void	send_error(int n, char *str)
 	}
 	else if (n == 1)
 	{
-		ft_putstr_fd(str, 1);
-		ft_putstr_fd(" is invalid\n", 1);
+		ft_putstr_fd(ft_strjoin("zsh: command not found: ", str), 1);
+		write(1, "\n", 1);
 		exit (-1);
 	}
 	else if (n == 2)
 	{
 		ft_putstr_fd(str, 1);
 		ft_putstr_fd("it doesn't work\n", 1);
+		exit (-1);
+	}
+	else if (n == 3)
+	{
+		ft_putstr_fd("zsh: no such file or dirctory: ", 1);
+		ft_putstr_fd(str, 1);
+		write (1, "\n", 1);
 		exit (-1);
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: alsanche <alsanche@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/21 13:31:09 by alsanche          #+#    #+#             */
-/*   Updated: 2022/02/25 21:10:25 by alsanche         ###   ########lyon.fr   */
+/*   Updated: 2022/05/17 15:52:31 by alsanche         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,8 @@ int	main(int arc, char **arv, char **enpv)
 
 	if (arc == 5)
 	{
+		if (access(ft_strjoin("./", arv[1]), F_OK))
+			send_error(3, arv[1]);
 		file[0] = open(arv[1], O_RDONLY, 0644);
 		if (file[0] < 0)
 		{
