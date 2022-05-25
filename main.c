@@ -6,16 +6,11 @@
 /*   By: alsanche <alsanche@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/21 13:31:09 by alsanche          #+#    #+#             */
-/*   Updated: 2022/05/25 16:12:10 by alsanche         ###   ########lyon.fr   */
+/*   Updated: 2022/05/25 16:25:20 by alsanche         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
-
-void	aleaks(void)
-{
-	system("leaks pipex");
-}
 
 void	ft_test(int fd, char *path, char **comand, char **enpv)
 {
@@ -110,7 +105,6 @@ int	main(int arc, char **arv, char **enpv)
 
 	if (arc == 5)
 	{
-		aleaks();
 		temp = arv[1];
 		if (arv[1][0] != '/')
 			temp = ft_strjoin("./", arv[1]);
