@@ -46,43 +46,42 @@ void	ft_free_all(char **str)
 	int	i;
 
 	i = 0;
-	while (str[i])
+	while (str[i] != NULL)
 		i++;
-	while (str[i - 1])
+	while (str[i--])
 	{
 		free(str[i]);
-		i--;
 	}
 	free(str);
 }
 
 void	send_error(int n, char *str)
 {
+	char	*temp;
+
 	if (n == 0)
 	{	
-		ft_putstr_fd("zsh: permission denied: ", 1);
-		ft_putstr_fd(str, 1);
-		write(1, "\n", 1);
+		temp = ft_strjoin("zsh: permission denied: ", str);
+		ft_putstr_fd(temp, 1);
+		free(temp);
+		exit (-1);
 	}
 	else if (n == 1)
 	{
-		ft_putstr_fd(ft_strjoin("zsh: command not found: ", str), 1);
-		write(1, "\n", 1);
-		exit (-1);
+		temp = ft_strjoin("zsh: command not found: ", str);
+		ft_putstr_fd(temp, 1);
 	}
 	else if (n == 2)
 	{
-		ft_putstr_fd(str, 1);
-		ft_putstr_fd("it doesn't work\n", 1);
-		exit (-1);
+		temp = ft_strjoin(str, " it doesn't work");
+		ft_putstr_fd(temp, 1);
 	}
-	else if (n == 3)
+	else
 	{
-		ft_putstr_fd("zsh: no such file or dirctory: ", 1);
-		ft_putstr_fd(str, 1);
-		write (1, "\n", 1);
-		exit (-1);
+		temp = ft_strjoin("zsh: no such file or directory: ", str);
+		ft_putstr_fd(temp, 1);
 	}
+	free(temp);
 }
 
 char	*str_path(char **enpv)

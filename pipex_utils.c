@@ -6,7 +6,7 @@
 /*   By: alsanche <alsanche@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/14 18:44:01 by alsanche          #+#    #+#             */
-/*   Updated: 2022/05/14 19:05:01 by alsanche         ###   ########lyon.fr   */
+/*   Updated: 2022/05/25 15:48:01 by alsanche         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,4 +36,5 @@ void	ft_putstr_fd(char *s, int fd)
 		write(fd, &s[i], 1);
 		i++;
 	}
+	write(1, "\n", 1);
 }

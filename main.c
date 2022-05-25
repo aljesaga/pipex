@@ -6,11 +6,16 @@
 /*   By: alsanche <alsanche@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/21 13:31:09 by alsanche          #+#    #+#             */
-/*   Updated: 2022/05/17 15:52:31 by alsanche         ###   ########lyon.fr   */
+/*   Updated: 2022/05/25 16:12:10 by alsanche         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
+
+void	aleaks(void)
+{
+	system("leaks pipex");
+}
 
 void	ft_test(int fd, char *path, char **comand, char **enpv)
 {
@@ -18,33 +23,36 @@ void	ft_test(int fd, char *path, char **comand, char **enpv)
 	execve(path, comand, enpv);
 }
 
-void	ft_romulo(int *fd, int file, char **comand, char **enpv)
+void	ft_romulo(int *fd, int file, char *comand, char **enpv)
 {
+	char	**romulo;
 	char	**path;
 	char	*gps;
 	int		i;
 
 	close(fd[FD_W]);
 	dup2(fd[FD_R], STDIN_FILENO);
+	romulo = ft_split(comand, ' ');
 	path = find_path(enpv);
 	i = 0;
 	while (path[i])
 	{
-		gps = ft_strjoin(path[i], comand[0]);
+		gps = ft_strjoin(path[i], romulo[0]);
 		if (!access(gps, R_OK))
-			ft_test(file, gps, comand, enpv);
+			ft_test(file, gps, romulo, enpv);
 		free(gps);
 		i++;
 	}
-	send_error(1, comand[0]);
+	send_error(1, comand);
+	ft_free_all(romulo);
 	ft_free_all(path);
-	close(file);
 	close(fd[FD_R]);
 	exit (-1);
 }
 
-void	ft_remo(int *fd, int file, char **comand, char **enpv)
+void	ft_remo(int *fd, int file, char *comand, char **enpv)
 {
+	char	**remo;
 	char	**path;
 	char	*gps;
 	int		i;
@@ -52,17 +60,19 @@ void	ft_remo(int *fd, int file, char **comand, char **enpv)
 	close(fd[FD_R]);
 	dup2(file, STDIN_FILENO);
 	close(file);
+	remo = ft_split(comand, ' ');
 	path = find_path(enpv);
 	i = 0;
 	while (path[i])
 	{
-		gps = ft_strjoin(path[i], comand[0]);
+		gps = ft_strjoin(path[i], remo[0]);
 		if (!access(gps, R_OK))
-			ft_test(fd[FD_W], gps, comand, enpv);
+			ft_test(fd[FD_W], gps, remo, enpv);
 		free(gps);
 		i++;
 	}
-	send_error(1, comand[0]);
+	send_error(1, comand);
+	ft_free_all(remo);
 	ft_free_all(path);
 	close(fd[FD_W]);
 	exit (-1);
@@ -71,43 +81,43 @@ void	ft_remo(int *fd, int file, char **comand, char **enpv)
 void	pipex(int *file, char **arv, char **enpv)
 {
 	int		fd[2];
-	char	**remo;
-	char	**romulo;
 	pid_t	child;
 
-	remo = ft_split(arv[2], ' ');
-	romulo = ft_split(arv[3], ' ');
+	file[0] = open(arv[1], O_RDONLY, 0644);
+	if (file[0] < 0)
+		send_error(0, arv[1]);
+	file[1] = open(arv[4], O_RDWR | O_CREAT | O_TRUNC, 0644);
+	if (file[1] < 0)
+		send_error(0, arv[4]);
 	pipe(fd);
 	child = fork();
 	if (child == -1)
 		send_error(2, "fork");
 	if (child == 0)
-		ft_remo(fd, file[0], remo, enpv);
+		ft_remo(fd, file[0], arv[2], enpv);
 	else
 	{
-		wait(&child);
-		ft_romulo(fd, file[1], romulo, enpv);
+		ft_romulo(fd, file[1], arv[3], enpv);
 	}
+	wait(&child);
+	close(file[1]);
 }
 
 int	main(int arc, char **arv, char **enpv)
 {
 	int		file[2];
+	char	*temp;
 
 	if (arc == 5)
 	{
-		if (access(ft_strjoin("./", arv[1]), F_OK))
+		aleaks();
+		temp = arv[1];
+		if (arv[1][0] != '/')
+			temp = ft_strjoin("./", arv[1]);
+		if (access(temp, F_OK))
+		{
 			send_error(3, arv[1]);
-		file[0] = open(arv[1], O_RDONLY, 0644);
-		if (file[0] < 0)
-		{
-			send_error(0, arv[1]);
-			return (0);
-		}
-		file[1] = open(arv[4], O_RDWR | O_CREAT | O_TRUNC, 0644);
-		if (file[1] < 0)
-		{
-			send_error(0, arv[4]);
+			free(temp);
 			return (0);
 		}
 		pipex(file, arv, enpv);

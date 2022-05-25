@@ -6,7 +6,7 @@
 /*   By: alsanche <alsanche@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 22:11:20 by alsanche          #+#    #+#             */
-/*   Updated: 2022/05/14 19:06:46 by alsanche         ###   ########lyon.fr   */
+/*   Updated: 2022/05/25 14:25:30 by alsanche         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,8 @@
 /* main.c */
 
 void	ft_test(int fd, char *path, char **comand, char **enpv);
-void	ft_romulo(int *fd, int file, char **comand, char **enpv);
-void	ft_remo(int *fd, int file, char **comand, char **enpv);
+void	ft_romulo(int *fd, int file, char *comand, char **enpv);
+void	ft_remo(int *fd, int file, char *comand, char **enpv);
 void	pipex(int *file, char **arv, char **enpv);
 int		main(int arc, char **arv, char **empv);
 

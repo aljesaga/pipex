@@ -6,7 +6,7 @@
 #    By: alsanche <alsanche@student.42lyon.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/27 16:00:21 by alsanche          #+#    #+#              #
-#    Updated: 2022/05/14 19:08:02 by alsanche         ###   ########lyon.fr    #
+#    Updated: 2022/05/25 16:17:26 by alsanche         ###   ########lyon.fr    #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,7 +25,7 @@ CFLAGS = -Wall -Wextra -Werror
 all: $(NAME)
 
 $(NAME): $(OBJS)
-		$(CC) $^ -o $@ $(CFLAGS) $(DEBUG)
+		$(CC) $^ -o $@ $(CFLAGS) 
 
 clean:
 		rm -rf $(OBJS)
