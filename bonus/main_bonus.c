@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   main_bonus.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: alsanche <alsanche@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/21 13:31:09 by alsanche          #+#    #+#             */
-/*   Updated: 2022/05/25 16:25:20 by alsanche         ###   ########lyon.fr   */
+/*   Updated: 2022/05/30 19:14:35 by alsanche         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
+#include "pipex_bonus.h"
 
 void	ft_test(int fd, char *path, char **comand, char **enpv)
 {
@@ -18,23 +18,19 @@ void	ft_test(int fd, char *path, char **comand, char **enpv)
 	execve(path, comand, enpv);
 }
 
-void	ft_romulo(int *fd, int file, char *comand, char **enpv)
+void	ft_romulo(int *fd, char **comand, t_s_comand *wolf)
 {
-	char	**romulo;
-	char	**path;
 	char	*gps;
 	int		i;
 
 	close(fd[FD_W]);
 	dup2(fd[FD_R], STDIN_FILENO);
-	romulo = ft_split(comand, ' ');
-	path = find_path(enpv);
 	i = 0;
-	while (path[i])
+	while (wolf->path[i])
 	{
-		gps = ft_strjoin(path[i], romulo[0]);
+		gps = ft_strjoin(wolf->path[i], comand[0]);
 		if (!access(gps, R_OK))
-			ft_test(file, gps, romulo, enpv);
+			ft_test(wolf->file_out, gps, comand, wolf->enpv);
 		free(gps);
 		i++;
 	}
@@ -45,24 +41,21 @@ void	ft_romulo(int *fd, int file, char *comand, char **enpv)
 	exit (-1);
 }
 
-void	ft_remo(int *fd, int file, char *comand, char **enpv)
+void	ft_remo(int *fd, char **comand, t_s_comand *wolf)
 {
-	char	**remo;
-	char	**path;
 	char	*gps;
 	int		i;
 
 	close(fd[FD_R]);
-	dup2(file, STDIN_FILENO);
-	close(file);
+	dup2(wolf->file_in, STDIN_FILENO);
+	close(wolf->file_in);
 	remo = ft_split(comand, ' ');
-	path = find_path(enpv);
 	i = 0;
-	while (path[i])
+	while (wolf->path[i])
 	{
-		gps = ft_strjoin(path[i], remo[0]);
+		gps = ft_strjoin(wolf->path[i], comand[0]);
 		if (!access(gps, R_OK))
-			ft_test(fd[FD_W], gps, remo, enpv);
+			ft_test(fd[FD_W], gps, comand, wolf->enpv);
 		free(gps);
 		i++;
 	}
@@ -73,16 +66,23 @@ void	ft_remo(int *fd, int file, char *comand, char **enpv)
 	exit (-1);
 }
 
-void	pipex(t_s_comand *wolf, char **arv, char **enpv)
+void	pipex(t_s_comand *wolf, char **arv, char **enpv, int x)
 {
 	int		fd[2];
-	pid_t	child[wolf->n_com];
+	pid_t	child;
 
-	wolf->file_out = open(arv[wolf->arkc], O_RDWR | O_CREAT | O_TRUNC, 0644);
+	wolf->path = find_path(enpv);
+	wolf->empv = enpv;
+	if (x == 0)
+	{
+		draw_command(wolf, arv);
+		wolf->file_out = open(arv[wolf->arkc],
+				O_RDWR | O_CREAT | O_TRUNC, 0644);
+	}
 	if (wolf->file_out < 0)
 		send_error(0, arv[wolf->arkc]);
 	pipe(fd);
-	init_child(wolf, &fd, &child);
+	init_child(wolf, &fd, child);
 }
 
 int	main(int arc, char **arv, char **enpv)

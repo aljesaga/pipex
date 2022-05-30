@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex_utils.c                                      :+:      :+:    :+:   */
+/*   pipex_utils_bonus.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: alsanche <alsanche@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/14 18:44:01 by alsanche          #+#    #+#             */
-/*   Updated: 2022/05/25 15:48:01 by alsanche         ###   ########lyon.fr   */
+/*   Updated: 2022/05/30 15:51:11 by alsanche         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
+#include "pipex_bonus.h"
 
 size_t	ft_strlen(const char *c)
 {
@@ -42,7 +42,7 @@ void	ft_putstr_fd(char *s, int fd)
 void	draw_command(t_s_comand *wolf, char **arv)
 {
 	int	i;
-	int x;
+	int	x;
 
 	i = 0;
 	x = 2;
@@ -55,18 +55,16 @@ void	draw_command(t_s_comand *wolf, char **arv)
 	}
 }
 
-ft_roma(int *fd, char **command)
+void	ft_roma(int *fd, char **command, t_s_comand *wolf)
 {
-	char	**path;
 	char	*gps;
 	int		i;
 
 	dup2(fd[FD_R], STDIN_FILENO);
-	path = find_path(enpv);
 	i = 0;
-	while (path[i])
+	while (wolf->path[i])
 	{
-		gps = ft_strjoin(path[i], command[0]);
+		gps = ft_strjoin(wolf->path[i], command[0]);
 		if (!access(gps, R_OK))
 			ft_test(fd[FD_W], gps, command, enpv);
 		free(gps);
@@ -80,19 +78,19 @@ ft_roma(int *fd, char **command)
 	exit (-1);
 }
 
-void	init_childs(t_s_comand *wolf, int *fd, pid_t *child)
+void	init_childs(t_s_comand *wolf, int *fd, pid_t child)
 {	
 	int	i;
 
 	i = 0;
 	while (i < wolf->n_com)
 	{
-		child[i] = fork();
-		if (child[i] == -1)
+		child = fork();
+		if (child == -1)
 			send_error(2, "fork");
-		if (child[i] == 0)
+		if (child == 0 && i == 0)
 			ft_remo(fd, wolf->file_in, wolf->command[i], enpv);
-		else if (i >= 1 && i < wolf->n_com)
+		else if (child == 0)
 		{
 			ft_roma(fd, wolf->command[i], enpv);
 		}
@@ -100,6 +98,7 @@ void	init_childs(t_s_comand *wolf, int *fd, pid_t *child)
 		{
 			ft_romulo(fd, wolf->file_out, wolf->command[i], enpv);
 		}
+	}
 	wait(&child);
 	close(file_out);
 }

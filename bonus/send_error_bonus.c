@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
+#include "pipex_bonus.h"
 
 char	*ft_strjoin(char const *s1, char const *s2)
 {
@@ -41,18 +41,22 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	return (new);
 }
 
-void	ft_free_all(char **str)
+void	ft_free_all(t_s_comand *wolf)
 {
 	int	i;
 
 	i = 0;
-	while (str[i] != NULL)
+	free(wolf->fd);
+	wolf->n_com = 0;
+	wolf->arkc = 0;
+	while (wolf->command[i] != NULL)
 		i++;
-	while (str[i--])
+	while (i--)
 	{
-		free(str[i]);
+		ft_free_c(command[i]);
 	}
-	free(str);
+	free(command);
+	ft_free_c(path);
 }
 
 void	send_error(int n, char *str)
