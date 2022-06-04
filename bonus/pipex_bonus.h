@@ -15,6 +15,7 @@
 
 # define    FD_R 0
 # define    FD_W 1
+# define	BUFFER_SIZE 5
 
 # include <stdio.h>
 # include <unistd.h>
@@ -42,7 +43,7 @@ typedef struct s_s_comand
 void	ft_test(int fd, char *path, char **comand, char **enpv);
 void	ft_romulo(int *fd, char **comand, t_s_comand *wolf);
 void	ft_remo(int *fd, char **comand, t_s_comand *wolf);
-void	pipex(t_s_comand *wolf, char **arv, char **enpv);
+void	pipex(t_s_comand *wolf, char **arv, char **enpv, int x);
 int		main(int arc, char **arv, char **empv);
 
 /* send_error_bonus.c */
@@ -63,10 +64,22 @@ size_t	ft_strlen(const char *c);
 void	ft_putstr_fd(char *s, int fd);
 void	draw_command(t_s_comand *wolf, char **arv);
 void	ft_roma(int *fd, char **command, t_s_comand *wolf);
-void	init_childs(t_s_comand *wolf, int *fd, pid_t child);
+void	init_childs(t_s_comand *wolf, int *fd);
 
 /* pipex_utils_2_bonus.c */
 
 void	ft_free_c(char **str);
+int		ft_strncmp(const char *s1, const char *s2, size_t n);
+void	ft_take_msn(char *std, t_s_comand *wolf);
+void	ft_here_doc(char **arv, char **enpv, t_s_comand *wolf);
+
+/* get_next_line.c */
+
+size_t	ft_len(const char *c);
+char	*get_next_line(int fd);
+char	*ft_join(char const *s1, char const *s2, size_t c);
+char	*ft_strup(char *s1, size_t i);
+char	*ft_remove(char *str, size_t i);
+size_t	ft_check(char *str);
 
 #endif

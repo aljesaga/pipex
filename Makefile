@@ -16,7 +16,8 @@ SRCS = ./src/main.c ./src/send_error.c ./src/ft_split.c ./src/pipex_utils.c
 
 SRCS_BONUS = ./bonus/main_bonus.c ./bonus/send_error_bonus.c \
 				./src/ft_split.c ./bonus/pipex_utils_2_bonus.c \
-				./bonus/pipex_utils_bonus.c
+				./bonus/pipex_utils_bonus.c ./bonus/get_next_line.c \
+				./bonus/get_next_line_utils.c
 
 OBJS =  $(SRCS:%.c=%.o)
 
@@ -31,15 +32,14 @@ CFLAGS = -Wall -Wextra -Werror
 all: $(NAME)
 
 $(NAME): $(OBJS)
-		$(CC) $^ -o $@ $(CFLAGS) 
+		$(CC) $^ -o $@ $(CFLAGS) $(DEBUG)
 
-bonus: 
-		$(NAME): $(OBJS_BONUS)
-			$(CC) $^ -o $@ $(CFLAGS)
+bonus: $(OBJS_BONUS)
+		$(CC) $(OBJS_BONUS) -o $(NAME) $(CFLAGS) $(DEBUG)
 
 clean:
 	@	rm -rf ./src/$(OBJS)
-	@	rm -rf ./bonus/$(OBJS_BONUS)
+	@	rm -rf ./bonus/$(OBJS_BONUS) 
 
 fclean:
 	@	rm -f $(NAME)

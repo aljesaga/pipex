@@ -53,10 +53,10 @@ void	ft_free_all(t_s_comand *wolf)
 		i++;
 	while (i--)
 	{
-		ft_free_c(command[i]);
+		ft_free_c(wolf->command[i]);
 	}
-	free(command);
-	ft_free_c(path);
+	free(wolf->command);
+	ft_free_c(wolf->path);
 }
 
 void	send_error(int n, char *str)
