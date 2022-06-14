@@ -6,7 +6,7 @@
 #    By: alsanche <alsanche@student.42lyon.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/27 16:00:21 by alsanche          #+#    #+#              #
-#    Updated: 2022/05/30 18:15:43 by alsanche         ###   ########lyon.fr    #
+#    Updated: 2022/06/14 18:26:15 by alsanche         ###   ########lyon.fr    #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,18 +28,19 @@ CC = gcc
 DEBUG = -fsanitize=address -g3
 
 CFLAGS = -Wall -Wextra -Werror 
+CFLAGS += $(DEBUG)
 
 all: $(NAME)
 
 $(NAME): $(OBJS)
-		$(CC) $^ -o $@ $(CFLAGS) $(DEBUG)
+		$(CC) $^ -o $@ $(CFLAGS)
 
-bonus: $(OBJS_BONUS)
-		$(CC) $(OBJS_BONUS) -o $(NAME) $(CFLAGS) $(DEBUG)
+bonus:	$(OBJS_BONUS)
+		$(CC) $(OBJS_BONUS) -o $(NAME) $(CFLAGS)
 
 clean:
-	@	rm -rf ./src/$(OBJS)
-	@	rm -rf ./bonus/$(OBJS_BONUS) 
+	@	rm -rf ./src/$(OBJS) ./src/main.o
+	@	rm -rf ./bonus/$(OBJS_BONUS) ./bonus/main_bonus.o
 
 fclean:
 	@	rm -f $(NAME)

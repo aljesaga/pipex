@@ -6,7 +6,7 @@
 /*   By: alsanche <alsanche@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/30 16:01:55 by alsanche          #+#    #+#             */
-/*   Updated: 2022/05/30 19:09:30 by alsanche         ###   ########lyon.fr   */
+/*   Updated: 2022/06/14 19:35:53 by alsanche         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,17 +73,30 @@ void	ft_take_msn(char *std, t_s_comand *wolf)
 
 void	ft_here_doc(char **arv, char **enpv, t_s_comand *wolf)
 {
-	wolf->file_in = open(".ninja.txt", O_RDWR | O_CREAT, 0644);
+	wolf->file_in = open("./.ninja.txt", O_RDWR | O_CREAT, 0644);
 	if (wolf->file_in < 0)
 		ft_putstr_fd("the ninja was discovered", 1);
-	wolf->file_out = open(arv[5], O_RDWR | O_CREAT, 0644);
-	if (wolf->file_out < 0)
-		send_error(0, arv[5]);
-	printf("estas aqui");
-	wolf->command = malloc(sizeof(char**) * 3);
-	wolf->n_com = 1;
-	wolf->command[0] = ft_split(arv[3], ' ');
-	wolf->command[1] = ft_split(arv[4], ' ');
 	ft_take_msn(arv[2], wolf);
-	pipex(wolf, arv, enpv, 1);
+	wolf->n_com = wolf->ar - 2;
+	pipex(wolf, arv, enpv, 3);
+}
+
+void	ft_multi_cmd(int arc, char **arv, char **enpv, t_s_comand *wolf)
+{
+	char	*temp;
+
+	temp = arv[1];
+	if (arv[1][0] != '/')
+		temp = ft_strjoin("./", arv[1]);
+	if (access(temp, F_OK))
+	{
+		send_error(3, arv[1]);
+		free(temp);
+		exit (0);
+	}
+	wolf->file_in = open(arv[1], O_RDONLY, 0644);
+	if (wolf->file_in < 0)
+		send_error(0, arv[1]);
+	wolf->n_com = arc - 3;
+	pipex(wolf, arv, enpv, 2);
 }

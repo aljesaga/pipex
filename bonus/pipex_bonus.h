@@ -6,16 +6,16 @@
 /*   By: alsanche <alsanche@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 22:11:20 by alsanche          #+#    #+#             */
-/*   Updated: 2022/05/30 18:57:51 by alsanche         ###   ########lyon.fr   */
+/*   Updated: 2022/06/14 19:58:46 by alsanche         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PIPEX_BONUS_H
 # define PIPEX_BONUS_H
 
-# define    FD_R 0
-# define    FD_W 1
-# define	BUFFER_SIZE 5
+# define FD_R 0
+# define FD_W 1
+# define BUFFER_SIZE 5
 
 # include <stdio.h>
 # include <unistd.h>
@@ -33,7 +33,7 @@ typedef struct s_s_comand
 	char	***command;
 	int		*fd;
 	int		n_com;
-	int		arkc;
+	int		ar;
 	int		file_in;
 	int		file_out;
 }	t_s_comand;
@@ -62,9 +62,9 @@ char	**ft_split(char const *s, char c);
 
 size_t	ft_strlen(const char *c);
 void	ft_putstr_fd(char *s, int fd);
-void	draw_command(t_s_comand *wolf, char **arv);
+void	draw_command(t_s_comand *wolf, char **arv, int x);
 void	ft_roma(int *fd, char **command, t_s_comand *wolf);
-void	init_childs(t_s_comand *wolf, int *fd);
+void	init_childs(t_s_comand *wolf, int *fd, int i);
 
 /* pipex_utils_2_bonus.c */
 
@@ -72,6 +72,7 @@ void	ft_free_c(char **str);
 int		ft_strncmp(const char *s1, const char *s2, size_t n);
 void	ft_take_msn(char *std, t_s_comand *wolf);
 void	ft_here_doc(char **arv, char **enpv, t_s_comand *wolf);
+void	ft_multi_cmd(int arc, char **arv, char **enpv, t_s_comand *wolf);
 
 /* get_next_line.c */
 

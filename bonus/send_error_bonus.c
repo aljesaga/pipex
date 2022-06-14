@@ -48,7 +48,7 @@ void	ft_free_all(t_s_comand *wolf)
 	i = 0;
 	free(wolf->fd);
 	wolf->n_com = 0;
-	wolf->arkc = 0;
+	wolf->ar = 0;
 	while (wolf->command[i] != NULL)
 		i++;
 	while (i--)
