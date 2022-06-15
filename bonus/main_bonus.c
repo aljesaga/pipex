@@ -6,7 +6,7 @@
 /*   By: alsanche <alsanche@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/21 13:31:09 by alsanche          #+#    #+#             */
-/*   Updated: 2022/06/14 20:26:45 by alsanche         ###   ########lyon.fr   */
+/*   Updated: 2022/06/15 21:50:11 by alsanche         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,9 @@ void	ft_romulo(int *fd, char **comand, t_s_comand *wolf)
 
 	close(fd[FD_W]);
 	dup2(fd[FD_R], STDIN_FILENO);
+	printf("fd[R]-----%d\n", fd[FD_R]);//aqui
+	printf("fd[W]-----%d\n", fd[FD_W]);//aqui
+	printf("estoy ejecutando---%s\n", comand[0]);//AQUI
 	i = 0;
 	while (wolf->path[i])
 	{
@@ -37,7 +40,7 @@ void	ft_romulo(int *fd, char **comand, t_s_comand *wolf)
 	send_error(1, comand[0]);
 	//ft_free_all(wolf);
 	close(fd[FD_R]);
-	exit (-1);
+	exit (0);
 }
 
 void	ft_remo(int *fd, char **comand, t_s_comand *wolf)
@@ -48,6 +51,9 @@ void	ft_remo(int *fd, char **comand, t_s_comand *wolf)
 	close(fd[FD_R]);
 	dup2(wolf->file_in, STDIN_FILENO);
 	close(wolf->file_in);
+		printf("fd[R]-----%d\n", fd[FD_R]);//aqui
+	printf("fd[W]-----%d\n", fd[FD_W]);//aqui
+	printf("estoy ejecutando---%s\n", comand[0]);//aqui
 	i = 0;
 	while (wolf->path[i])
 	{
@@ -60,12 +66,13 @@ void	ft_remo(int *fd, char **comand, t_s_comand *wolf)
 	send_error(1, comand[0]);
 	//ft_free_all(wolf);
 	close(fd[FD_W]);
-	exit (-1);
+	exit (0);
 }
 
 void	pipex(t_s_comand *wolf, char **arv, char **enpv, int x)
 {
 	int		i;
+	pid_t	child;
 	int		fd[2];
 
 	wolf->path = find_path(enpv);
@@ -78,8 +85,9 @@ void	pipex(t_s_comand *wolf, char **arv, char **enpv, int x)
 	i = 0;
 	while (i < wolf->n_com - 1)
 	{
-		init_childs(wolf, fd, i);
-		i++;
+		child = init_childs(wolf, wolf->command[i], fd, i);
+		wait(&child);
+		++i;
 	}
 	ft_romulo(fd, wolf->command[i], wolf);
 }
