@@ -44,7 +44,7 @@ void	draw_command(t_s_comand *wolf, char **arv, int x)
 	int	i;
 
 	i = 0;
-	wolf->command = malloc(sizeof(char **) * wolf->n_com + 1);
+	wolf->command = malloc(sizeof(char **) * wolf->n_com + 2);
 	if (!wolf->command)
 		send_error(3, "no funciono el malloc");
 	while (i < wolf->n_com)
@@ -64,7 +64,7 @@ void	ft_roma(int *fd, char **command, t_s_comand *wolf)
 	i = 0;
 	printf("fd[R]-----%d\n", fd[FD_R]);//aqui
 	printf("fd[W]-----%d\n", fd[FD_W]);//aqui
-	printf("estoy ejecutando-----%s\n", command[0]);//AQUI
+	printf("ROMA ejecutando-----%s\n", command[0]);//AQUI
 	while (wolf->path[i])
 	{
 		gps = ft_strjoin(wolf->path[i], command[0]);
@@ -84,11 +84,8 @@ pid_t	init_childs(t_s_comand *wolf, char **cmd, int *fd, int i)
 {	
 	pid_t	child;
 	int j = 0;//AQUI
-	int fd2[2];
 
 	child = fork();
-	pipe(fd2);
-	fd[0] = 0;
 	while (cmd[j] && child > 0)//AQUI
 	{
 		printf("%s\n", cmd[j]);
@@ -98,10 +95,10 @@ pid_t	init_childs(t_s_comand *wolf, char **cmd, int *fd, int i)
 	if (child == -1)
 		send_error(2, "fork");
 	if (child > 0 && i == 0)
-		ft_remo(fd2, cmd, wolf);
+		ft_remo(fd, cmd, wolf);
 	else if (child > 0)
-	{
-		ft_roma(fd2, cmd, wolf);
-	}
+		ft_roma(fd, cmd, wolf);
+	else if (child < 0 && i == wolf->n_com)
+		ft_romulo(fd, wolf->command[i], wolf);
 	return (child);
 }

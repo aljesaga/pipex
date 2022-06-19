@@ -46,17 +46,16 @@ void	ft_free_all(t_s_comand *wolf)
 	int	i;
 
 	i = 0;
-	free(wolf->fd);
-	wolf->n_com = 0;
 	wolf->ar = 0;
-	while (wolf->command[i] != NULL)
+	while (i < wolf->n_com)
 		i++;
-	while (i--)
+	while (i-- > 0)
 	{
 		ft_free_c(wolf->command[i]);
 	}
 	free(wolf->command);
 	ft_free_c(wolf->path);
+	wolf->n_com = 0;
 }
 
 void	send_error(int n, char *str)

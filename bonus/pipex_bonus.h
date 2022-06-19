@@ -31,7 +31,6 @@ typedef struct s_s_comand
 	char	**path;
 	char	**empv;
 	char	***command;
-	int		*fd;
 	int		n_com;
 	int		ar;
 	int		file_in;
@@ -83,4 +82,7 @@ char	*ft_strup(char *s1, size_t i);
 char	*ft_remove(char *str, size_t i);
 size_t	ft_check(char *str);
 
+/* por borrar */
+
+void	print_lista(t_s_comand *wolf);
 #endif

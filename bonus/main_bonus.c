@@ -27,7 +27,7 @@ void	ft_romulo(int *fd, char **comand, t_s_comand *wolf)
 	dup2(fd[FD_R], STDIN_FILENO);
 	printf("fd[R]-----%d\n", fd[FD_R]);//aqui
 	printf("fd[W]-----%d\n", fd[FD_W]);//aqui
-	printf("estoy ejecutando---%s\n", comand[0]);//AQUI
+	printf("final ejecutando---%s\n", comand[0]);//AQUI
 	i = 0;
 	while (wolf->path[i])
 	{
@@ -83,13 +83,13 @@ void	pipex(t_s_comand *wolf, char **arv, char **enpv, int x)
 	if (wolf->file_out < 0)
 		send_error(0, arv[wolf->ar]);
 	i = 0;
-	while (i < wolf->n_com - 1)
+	while (i < wolf->n_com)
 	{
 		child = init_childs(wolf, wolf->command[i], fd, i);
 		wait(&child);
 		++i;
 	}
-	ft_romulo(fd, wolf->command[i], wolf);
+	ft_free_all(wolf);
 }
 
 int	main(int arc, char **arv, char **enpv)

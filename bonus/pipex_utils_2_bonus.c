@@ -23,6 +23,7 @@ void	ft_free_c(char **str)
 	{
 		free(str[i]);
 	}
+	free(str);
 }
 
 int	ft_strncmp(const char *s1, const char *s2, size_t n)
@@ -87,12 +88,15 @@ void	ft_multi_cmd(int arc, char **arv, char **enpv, t_s_comand *wolf)
 
 	temp = arv[1];
 	if (arv[1][0] != '/')
+	{	
 		temp = ft_strjoin("./", arv[1]);
-	if (access(temp, F_OK))
-	{
-		send_error(3, arv[1]);
+		if (access(temp, F_OK))
+		{
+			send_error(3, arv[1]);
+			free(temp);
+			exit (0);
+		}
 		free(temp);
-		exit (0);
 	}
 	wolf->file_in = open(arv[1], O_RDONLY, 0644);
 	if (wolf->file_in < 0)

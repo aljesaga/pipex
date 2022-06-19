@@ -17,7 +17,7 @@ SRCS = ./src/main.c ./src/send_error.c ./src/ft_split.c ./src/pipex_utils.c
 SRCS_BONUS = ./bonus/main_bonus.c ./bonus/send_error_bonus.c \
 				./src/ft_split.c ./bonus/pipex_utils_2_bonus.c \
 				./bonus/pipex_utils_bonus.c ./bonus/get_next_line.c \
-				./bonus/get_next_line_utils.c
+				./bonus/get_next_line_utils.c ./bonus/print_lista.c
 
 OBJS =  $(SRCS:%.c=%.o)
 
