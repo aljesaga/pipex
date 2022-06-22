@@ -35,6 +35,7 @@ typedef struct s_s_comand
 	int		ar;
 	int		file_in;
 	int		file_out;
+	pid_t	childs;
 }	t_s_comand;
 
 /* main_bonus.c */
@@ -63,7 +64,7 @@ size_t	ft_strlen(const char *c);
 void	ft_putstr_fd(char *s, int fd);
 void	draw_command(t_s_comand *wolf, char **arv, int x);
 void	ft_roma(int *fd, char **command, t_s_comand *wolf);
-pid_t	init_childs(t_s_comand *wolf, char **cmd, int *fd, int i);
+void	init_childs(t_s_comand *wolf, char **cmd, int *fd, int i);
 
 /* pipex_utils_2_bonus.c */
 

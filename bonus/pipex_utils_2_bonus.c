@@ -74,12 +74,18 @@ void	ft_take_msn(char *std, t_s_comand *wolf)
 
 void	ft_here_doc(char **arv, char **enpv, t_s_comand *wolf)
 {
-	wolf->file_in = open("./.ninja.txt", O_RDWR | O_CREAT, 0644);
+	char  *del[2];
+
+	del[0] = "rm";
+	del[1] = " .ninja.txt";
+	wolf->file_in = open("./.ninja.txt", O_RDWR | O_CREAT | O_TRUNC, 0644);
 	if (wolf->file_in < 0)
 		ft_putstr_fd("the ninja was discovered", 1);
 	ft_take_msn(arv[2], wolf);
-	wolf->n_com = wolf->ar - 2;
+	wolf->n_com = wolf->ar - 4;
 	pipex(wolf, arv, enpv, 3);
+	close(wolf->file_in);
+	execve("/usr/bin/rm", del, enpv);
 }
 
 void	ft_multi_cmd(int arc, char **arv, char **enpv, t_s_comand *wolf)

@@ -60,8 +60,9 @@ void	ft_roma(int *fd, char **command, t_s_comand *wolf)
 	char	*gps;
 	int		i;
 
-	dup2(fd[FD_R], STDIN_FILENO);
 	i = 0;
+	dup2(fd[FD_R], STDIN_FILENO);
+	printf("std --------> %d\n", STDIN_FILENO);
 	printf("fd[R]-----%d\n", fd[FD_R]);//aqui
 	printf("fd[W]-----%d\n", fd[FD_W]);//aqui
 	printf("ROMA ejecutando-----%s\n", command[0]);//AQUI
@@ -80,25 +81,16 @@ void	ft_roma(int *fd, char **command, t_s_comand *wolf)
 	exit (-1);
 }
 
-pid_t	init_childs(t_s_comand *wolf, char **cmd, int *fd, int i)
+void	init_childs(t_s_comand *wolf, char **cmd, int *fd, int i)
 {	
-	pid_t	child;
-	int j = 0;//AQUI
-
-	child = fork();
-	while (cmd[j] && child > 0)//AQUI
-	{
-		printf("%s\n", cmd[j]);
-		j++;
-	}//AQUI
-	printf("%d\n", child);//AQUI
-	if (child == -1)
+	wolf->childs = fork();
+	printf("%d\n", wolf->childs);//AQUI
+	if (wolf->childs == -1)
 		send_error(2, "fork");
-	if (child > 0 && i == 0)
+	if (wolf->childs > 0 && i == 0)
 		ft_remo(fd, cmd, wolf);
-	else if (child > 0)
-		ft_roma(fd, cmd, wolf);
-	else if (child < 0 && i == wolf->n_com)
+	else if (wolf->childs > 0 && i + 1 == wolf->n_com)
 		ft_romulo(fd, wolf->command[i], wolf);
-	return (child);
+	else if (wolf->childs > 0)
+		ft_roma(fd, cmd, wolf);
 }
