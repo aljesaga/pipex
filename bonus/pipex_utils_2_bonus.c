@@ -6,25 +6,11 @@
 /*   By: alsanche <alsanche@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/30 16:01:55 by alsanche          #+#    #+#             */
-/*   Updated: 2022/06/23 12:24:15 by alsanche         ###   ########lyon.fr   */
+/*   Updated: 2022/06/23 16:43:16 by alsanche         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex_bonus.h"
-
-void	ft_free_c(char **str)
-{
-	int	i;
-
-	i = 0;
-	while (str[i] != NULL)
-		i++;
-	while (i--)
-	{
-		free(str[i]);
-	}
-	free(str);
-}
 
 int	ft_strncmp(const char *s1, const char *s2, size_t n)
 {
@@ -52,61 +38,38 @@ int	ft_strncmp(const char *s1, const char *s2, size_t n)
 	return (0);
 }
 
-void	ft_take_msn(char *std, t_s_comand *wolf)
+char	*str_path(char **enpv)
 {
-	char	*temp;
-	char	*limit;
+	int	i;
 
-	limit = ft_strjoin(std, "\n");
-	while (1)
+	i = 0;
+	while (enpv[i])
 	{
-		temp = get_next_line(STDIN_FILENO);
-		if (ft_strncmp(temp, limit, ft_strlen(limit) + 1) == 0)
-		{	
-			free(temp);
-			free(limit);
-			break ;
-		}
-		ft_putstr_fd(temp, wolf->file_in);
-		free(temp);
+		if (enpv[i][0] == 'P' && enpv[i][1] == 'A'
+			&& enpv[i][2] == 'T' && enpv[i][3] == 'H')
+			return (enpv[i]);
+		i++;
 	}
+	return (NULL);
 }
 
-void	ft_here_doc(char **arv, char **enpv, t_s_comand *wolf)
+char	**find_path(char **enpv)
 {
-	char	*del[2];
+	char	**gps;
+	char	*path;
+	char	*aux;
+	int		i;
 
-	del[0] = "rm";
-	del[1] = " .ninja.txt";
-	wolf->file_in = open("./.ninja.txt", O_RDWR | O_CREAT | O_TRUNC, 0644);
-	if (wolf->file_in < 0)
-		ft_putstr_fd("the ninja was discovered", 1);
-	ft_take_msn(arv[2], wolf);
-	wolf->n_com = wolf->ar - 4;
-	pipex(wolf, arv, enpv, 3);
-	close(wolf->file_in);
-	execve("/usr/bin/rm", del, enpv);
-}
-
-void	ft_multi_cmd(int arc, char **arv, char **enpv, t_s_comand *wolf)
-{
-	char	*temp;
-
-	temp = arv[1];
-	if (arv[1][0] != '/')
-	{	
-		temp = ft_strjoin("./", arv[1]);
-		if (access(temp, F_OK))
-		{
-			send_error(3, arv[1]);
-			free(temp);
-			exit (0);
-		}
-		free(temp);
+	path = str_path(enpv);
+	if (!path)
+		send_error(1, "PATH");
+	i = -1;
+	gps = ft_split(path, ':');
+	while (gps[++i])
+	{
+		aux = gps[i];
+		gps[i] = ft_strjoin(aux, "/");
+		free(aux);
 	}
-	wolf->file_in = open(arv[1], O_RDONLY, 0644);
-	if (wolf->file_in < 0)
-		send_error(0, arv[1]);
-	wolf->n_com = arc - 3;
-	pipex(wolf, arv, enpv, 2);
+	return (gps);
 }

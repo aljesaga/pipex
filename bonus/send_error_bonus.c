@@ -21,7 +21,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 
 	if (!s1 || !s2)
 		return (NULL);
-	size = (ft_strlen(s1) + ft_strlen(s2));
+	size = (ft_len(s1) + ft_len(s2));
 	new = (char *)malloc(size + 1);
 	if (!new)
 		return (NULL);
@@ -39,6 +39,20 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	}
 	new[i++] = '\0';
 	return (new);
+}
+
+void	ft_free_c(char **str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i] != NULL)
+		i++;
+	while (i--)
+	{
+		free(str[i]);
+	}
+	free(str);
 }
 
 void	ft_free_all(t_s_comand *wolf)
@@ -85,40 +99,4 @@ void	send_error(int n, char *str)
 		ft_putstr_fd(temp, 1);
 	}
 	free(temp);
-}
-
-char	*str_path(char **enpv)
-{
-	int	i;
-
-	i = 0;
-	while (enpv[i])
-	{
-		if (enpv[i][0] == 'P' && enpv[i][1] == 'A'
-			&& enpv[i][2] == 'T' && enpv[i][3] == 'H')
-			return (enpv[i]);
-		i++;
-	}
-	return (NULL);
-}
-
-char	**find_path(char **enpv)
-{
-	char	**gps;
-	char	*path;
-	char	*aux;
-	int		i;
-
-	path = str_path(enpv);
-	if (!path)
-		send_error(1, "PATH");
-	i = -1;
-	gps = ft_split(path, ':');
-	while (gps[++i])
-	{
-		aux = gps[i];
-		gps[i] = ft_strjoin(aux, "/");
-		free(aux);
-	}
-	return (gps);
 }

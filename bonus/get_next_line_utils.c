@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alsanche <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: alsanche <alsanche@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/26 13:14:32 by alsanche          #+#    #+#             */
-/*   Updated: 2021/09/26 13:14:35 by alsanche         ###   ########.fr       */
+/*   Updated: 2022/06/23 16:28:27 by alsanche         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,7 @@ size_t	ft_len(const char *c)
 
 	i = 0;
 	while (c[i])
-	{
 		i++;
-	}
 	return (i);
 }
 
