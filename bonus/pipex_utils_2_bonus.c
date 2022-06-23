@@ -6,7 +6,7 @@
 /*   By: alsanche <alsanche@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/30 16:01:55 by alsanche          #+#    #+#             */
-/*   Updated: 2022/06/14 19:35:53 by alsanche         ###   ########lyon.fr   */
+/*   Updated: 2022/06/23 12:24:15 by alsanche         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ void	ft_take_msn(char *std, t_s_comand *wolf)
 
 void	ft_here_doc(char **arv, char **enpv, t_s_comand *wolf)
 {
-	char  *del[2];
+	char	*del[2];
 
 	del[0] = "rm";
 	del[1] = " .ninja.txt";

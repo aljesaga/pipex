@@ -6,7 +6,7 @@
 /*   By: alsanche <alsanche@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/14 18:44:01 by alsanche          #+#    #+#             */
-/*   Updated: 2022/06/15 21:52:32 by alsanche         ###   ########lyon.fr   */
+/*   Updated: 2022/06/23 15:14:37 by alsanche         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,42 +55,26 @@ void	draw_command(t_s_comand *wolf, char **arv, int x)
 	}
 }
 
-void	ft_roma(int *fd, char **command, t_s_comand *wolf)
-{
-	char	*gps;
-	int		i;
-
-	i = 0;
-	dup2(fd[FD_R], STDIN_FILENO);
-	printf("std --------> %d\n", STDIN_FILENO);
-	printf("fd[R]-----%d\n", fd[FD_R]);//aqui
-	printf("fd[W]-----%d\n", fd[FD_W]);//aqui
-	printf("ROMA ejecutando-----%s\n", command[0]);//AQUI
-	while (wolf->path[i])
-	{
-		gps = ft_strjoin(wolf->path[i], command[0]);
-		if (!access(gps, X_OK))
-			ft_test(fd[FD_W], gps, command, wolf->empv);
-		free(gps);
-		i++;
-	}
-	send_error(1, command[0]);
-	ft_free_all(wolf);
-	close(fd[FD_R]);
-	close(fd[FD_W]);
-	exit (-1);
-}
-
-void	init_childs(t_s_comand *wolf, char **cmd, int *fd, int i)
+void	init_childs(t_s_comand *wolf, char **cmd, int i)
 {	
-	wolf->childs = fork();
-	printf("%d\n", wolf->childs);//AQUI
-	if (wolf->childs == -1)
+	pid_t	pid;
+	int		fd[2];
+
+	pipe(fd);
+	pid = fork();
+	if (pid != 0)
+		wolf->childs[i] = pid;
+	else if (pid == -1)
 		send_error(2, "fork");
-	if (wolf->childs > 0 && i == 0)
-		ft_remo(fd, cmd, wolf);
-	else if (wolf->childs > 0 && i + 1 == wolf->n_com)
-		ft_romulo(fd, wolf->command[i], wolf);
-	else if (wolf->childs > 0)
-		ft_roma(fd, cmd, wolf);
+	else
+	{
+		printf("--fd[R]===%d------fd[W]===%d\n", fd[FD_R], fd[FD_W]);
+		if (i + 1 == wolf->n_com)
+			ft_romulo(fd, cmd, wolf);
+		else
+			ft_remo(fd, cmd, wolf);
+	}
+	close(fd[FD_W]);
+	printf("file_in ==== %d\n", wolf->file_in);
+	wolf->file_in = fd[FD_R];
 }

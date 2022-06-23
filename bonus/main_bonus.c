@@ -6,7 +6,7 @@
 /*   By: alsanche <alsanche@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/21 13:31:09 by alsanche          #+#    #+#             */
-/*   Updated: 2022/06/15 21:50:11 by alsanche         ###   ########lyon.fr   */
+/*   Updated: 2022/06/23 15:26:33 by alsanche         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,12 @@ void	ft_romulo(int *fd, char **comand, t_s_comand *wolf)
 	char	*gps;
 	int		i;
 
-	waitpid(wolf->childs, NULL, 0);
 	close(fd[FD_W]);
-	dup2(fd[FD_R], STDIN_FILENO);
+	dup2(wolf->file_in, STDIN_FILENO);
+	close(wolf->file_in);
 	printf("std --------> %d\n", STDIN_FILENO);
-	printf("fd[R]-----%d\n", fd[FD_R]);//aqui
-	printf("fd[W]-----%d\n", fd[FD_W]);//aqui
+	printf("fd[R]-----%d\n", wolf->file_in);//aqui
+	printf("fd[W]-----%d\n", wolf->file_out);//aqui
 	printf("final ejecutando---%s\n", comand[0]);//AQUI
 	i = 0;
 	while (wolf->path[i])
@@ -54,7 +54,7 @@ void	ft_remo(int *fd, char **comand, t_s_comand *wolf)
 	dup2(wolf->file_in, STDIN_FILENO);
 	close(wolf->file_in);
 	printf("std --------> %d\n", STDIN_FILENO);
-	printf("fd[R]-----%d\n", fd[FD_R]);//aqui
+	printf("fd[R]-----%d\n", wolf->file_in);//aqui
 	printf("fd[W]-----%d\n", fd[FD_W]);//aqui
 	printf("estoy ejecutando---%s\n", comand[0]);//aqui
 	i = 0;
@@ -71,28 +71,36 @@ void	ft_remo(int *fd, char **comand, t_s_comand *wolf)
 	close(fd[FD_W]);
 	exit (-1);
 }
+/*1 | 2 | 3
+
+(10, 11) = pipe()
+hijo 1: in(file_in), out(11)
+hijo 1: close(10)
+padre close(11)
+(12, 13) = pipe()
+2: in(10), out(13)
+3: in(12), out(file_out)*/
 
 void	pipex(t_s_comand *wolf, char **arv, char **enpv, int x)
 {
 	int		i;
-	int		fd[2];
 
 	wolf->path = find_path(enpv);
 	wolf->empv = enpv;
-	pipe(fd);
+	i = -1;
 	draw_command(wolf, arv, x);
 	wolf->file_out = open(arv[wolf->ar - 1], O_RDWR | O_CREAT | O_TRUNC, 0644);
 	if (wolf->file_out < 0)
 		send_error(0, arv[wolf->ar]);
-	i = 0;
-	while (i < wolf->n_com)
-	{
-		init_childs(wolf, wolf->command[i], fd, i);
-		wait(&wolf->childs);
-		++i;
-	}
-	close(fd[FD_R]);
-	close(fd[FD_W]);
+	wolf->childs = malloc(sizeof(pid_t *) * wolf->n_com);
+	if (!wolf->childs)
+		send_error(0, "no de crean los hijos");
+	i = -1;
+	while (++i < wolf->n_com)
+		init_childs(wolf, wolf->command[i], i);
+	i = -1;
+	while (++i < wolf->n_com)
+		waitpid(wolf->childs[i], NULL, 0);
 	ft_free_all(wolf);
 }
 
