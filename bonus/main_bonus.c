@@ -56,6 +56,7 @@ void	pipex(t_s_comand *wolf, char **arv, char **enpv, int x)
 	i = -1;
 	while (++i < wolf->n_com)
 		waitpid(wolf->childs[i], NULL, 0);
+	free(wolf->childs);
 	ft_free_all(wolf);
 }
 
