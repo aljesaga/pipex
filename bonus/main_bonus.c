@@ -6,7 +6,7 @@
 /*   By: alsanche <alsanche@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/21 13:31:09 by alsanche          #+#    #+#             */
-/*   Updated: 2022/06/23 17:52:47 by alsanche         ###   ########lyon.fr   */
+/*   Updated: 2022/07/05 13:59:16 by alsanche         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,6 @@ void	pipex(t_s_comand *wolf, char **arv, char **enpv, int x)
 	i = -1;
 	while (++i < wolf->n_com)
 		waitpid(wolf->childs[i], NULL, 0);
-	free(wolf->childs);
 	ft_free_all(wolf);
 }
 
@@ -81,19 +80,19 @@ void	ft_multi_cmd(int arc, char **arv, char **enpv, t_s_comand *wolf)
 
 	temp = arv[1];
 	if (temp[0] != '/')
-	{	
 		temp = ft_strjoin("./", arv[1]);
-		if (access(temp, F_OK))
-		{
-			send_error(3, arv[1]);
-			free(temp);
-			exit (0);
-		}
+	if (access(temp, F_OK))
+	{
+		send_error(3, arv[1]);
 		free(temp);
+		wolf->file_in = -1;
 	}
-	wolf->file_in = open(arv[1], O_RDONLY, 0644);
-	if (wolf->file_in < 0)
-		send_error(0, arv[1]);
+	else
+	{
+		wolf->file_in = open(arv[1], O_RDONLY, 0644);
+		if (wolf->file_in < 0)
+			send_error(0, arv[1]);
+	}
 	wolf->n_com = arc - 3;
 	pipex(wolf, arv, enpv, 2);
 }

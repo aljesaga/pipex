@@ -68,7 +68,8 @@ void	ft_free_all(t_s_comand *wolf)
 		ft_free_c(wolf->command[i]);
 	}
 	free(wolf->command);
-	ft_free_c(wolf->path);
+	if (wolf->path != NULL)
+		ft_free_c(wolf->path);
 	wolf->n_com = 0;
 }
 
@@ -80,8 +81,6 @@ void	send_error(int n, char *str)
 	{	
 		temp = ft_strjoin("zsh: permission denied: ", str);
 		ft_putstr_fd(temp, 1);
-		free(temp);
-		exit (-1);
 	}
 	else if (n == 1)
 	{

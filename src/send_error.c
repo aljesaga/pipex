@@ -64,7 +64,6 @@ void	send_error(int n, char *str)
 		temp = ft_strjoin("zsh: permission denied: ", str);
 		ft_putstr_fd(temp, 1);
 		free(temp);
-		exit (-1);
 	}
 	else if (n == 1)
 	{
@@ -89,6 +88,8 @@ char	*str_path(char **enpv)
 	int	i;
 
 	i = 0;
+	if (*enpv == NULL || !enpv)
+		exit (127);
 	while (enpv[i])
 	{
 		if (enpv[i][0] == 'P' && enpv[i][1] == 'A'

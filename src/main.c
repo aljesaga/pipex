@@ -6,7 +6,7 @@
 /*   By: alsanche <alsanche@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/21 13:31:09 by alsanche          #+#    #+#             */
-/*   Updated: 2022/05/25 16:25:20 by alsanche         ###   ########lyon.fr   */
+/*   Updated: 2022/07/05 13:48:28 by alsanche         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,9 +78,6 @@ void	pipex(int *file, char **arv, char **enpv)
 	int		fd[2];
 	pid_t	child;
 
-	file[0] = open(arv[1], O_RDONLY, 0644);
-	if (file[0] < 0)
-		send_error(0, arv[1]);
 	file[1] = open(arv[4], O_RDWR | O_CREAT | O_TRUNC, 0644);
 	if (file[1] < 0)
 		send_error(0, arv[4]);
@@ -112,7 +109,12 @@ int	main(int arc, char **arv, char **enpv)
 		{
 			send_error(3, arv[1]);
 			free(temp);
-			return (0);
+		}
+		else
+		{
+			file[0] = open(arv[1], O_RDONLY, 0644);
+			if (file[0] == -1)
+				send_error(0, arv[1]);
 		}
 		pipex(file, arv, enpv);
 	}

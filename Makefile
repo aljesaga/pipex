@@ -6,7 +6,7 @@
 #    By: alsanche <alsanche@student.42lyon.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/27 16:00:21 by alsanche          #+#    #+#              #
-#    Updated: 2022/06/23 15:44:50 by alsanche         ###   ########lyon.fr    #
+#    Updated: 2022/07/05 13:28:49 by alsanche         ###   ########lyon.fr    #
 #                                                                              #
 # **************************************************************************** #
 
@@ -43,6 +43,7 @@ clean:
 	@	rm -rf ./bonus/$(OBJS_BONUS) ./bonus/main_bonus.o
 
 fclean:
+	@	make clean
 	@	rm -f $(NAME)
 
 re: fclean all

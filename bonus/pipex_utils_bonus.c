@@ -6,7 +6,7 @@
 /*   By: alsanche <alsanche@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/14 18:44:01 by alsanche          #+#    #+#             */
-/*   Updated: 2022/06/23 17:16:27 by alsanche         ###   ########lyon.fr   */
+/*   Updated: 2022/07/05 14:43:57 by alsanche         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ void	ft_run(int *fd, char **comand, t_s_comand *wolf)
 	dup2(wolf->file_in, STDIN_FILENO);
 	close(wolf->file_in);
 	i = 0;
-	while (wolf->path[i])
+	while (wolf->path != NULL && wolf->path[i])
 	{
 		gps = ft_strjoin(wolf->path[i], comand[0]);
 		if (!access(gps, X_OK))
@@ -73,7 +73,7 @@ void	ft_run(int *fd, char **comand, t_s_comand *wolf)
 	send_error(1, comand[0]);
 	ft_free_all(wolf);
 	close(fd[FD_W]);
-	exit (-1);
+	exit (127);
 }
 
 void	draw_command(t_s_comand *wolf, char **arv, int x)

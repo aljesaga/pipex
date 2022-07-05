@@ -6,7 +6,7 @@
 /*   By: alsanche <alsanche@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/30 16:01:55 by alsanche          #+#    #+#             */
-/*   Updated: 2022/06/23 16:43:16 by alsanche         ###   ########lyon.fr   */
+/*   Updated: 2022/07/05 14:34:50 by alsanche         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,8 @@ char	*str_path(char **enpv)
 	int	i;
 
 	i = 0;
+	if (!enpv || *enpv == NULL)
+		return (NULL);
 	while (enpv[i])
 	{
 		if (enpv[i][0] == 'P' && enpv[i][1] == 'A'
@@ -62,7 +64,7 @@ char	**find_path(char **enpv)
 
 	path = str_path(enpv);
 	if (!path)
-		send_error(1, "PATH");
+		return (NULL);
 	i = -1;
 	gps = ft_split(path, ':');
 	while (gps[++i])
