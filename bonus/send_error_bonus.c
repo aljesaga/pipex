@@ -81,6 +81,7 @@ void	send_error(int n, char *str)
 	{	
 		temp = ft_strjoin("zsh: permission denied: ", str);
 		ft_putstr_fd(temp, 1);
+		exit (EXIT_SUCCESS);
 	}
 	else if (n == 1)
 	{

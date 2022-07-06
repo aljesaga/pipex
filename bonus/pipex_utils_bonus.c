@@ -6,7 +6,7 @@
 /*   By: alsanche <alsanche@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/14 18:44:01 by alsanche          #+#    #+#             */
-/*   Updated: 2022/07/05 14:43:57 by alsanche         ###   ########lyon.fr   */
+/*   Updated: 2022/07/06 22:36:31 by alsanche         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,10 @@ void	ft_take_msn(char *std, t_s_comand *wolf)
 	char	*limit;
 
 	limit = ft_strjoin(std, "\n");
-	while (1)
+	while (limit)
 	{
 		temp = get_next_line(STDIN_FILENO);
-		if (ft_strncmp(temp, limit, ft_len(limit) + 1) == 0)
+		if (!ft_strncmp(temp, limit, ft_len(limit)))
 		{	
 			free(temp);
 			free(limit);
@@ -70,7 +70,10 @@ void	ft_run(int *fd, char **comand, t_s_comand *wolf)
 		free(gps);
 		i++;
 	}
-	send_error(1, comand[0]);
+	if (wolf->path == NULL)
+		send_error(3, comand[0]);
+	else
+		send_error(1, comand[0]);
 	ft_free_all(wolf);
 	close(fd[FD_W]);
 	exit (127);

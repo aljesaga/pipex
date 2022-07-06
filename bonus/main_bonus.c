@@ -6,7 +6,7 @@
 /*   By: alsanche <alsanche@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/21 13:31:09 by alsanche          #+#    #+#             */
-/*   Updated: 2022/07/05 13:59:16 by alsanche         ###   ########lyon.fr   */
+/*   Updated: 2022/07/06 22:12:19 by alsanche         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,8 @@ void	init_childs(t_s_comand *wolf, char **cmd, int i, char *arv)
 
 void	pipex(t_s_comand *wolf, char **arv, char **enpv, int x)
 {
-	int		i;
+	int	i;
+	int	status;
 
 	wolf->path = find_path(enpv);
 	wolf->empv = enpv;
@@ -55,7 +56,9 @@ void	pipex(t_s_comand *wolf, char **arv, char **enpv, int x)
 		init_childs(wolf, wolf->command[i], i, arv[wolf->ar - 1]);
 	i = -1;
 	while (++i < wolf->n_com)
-		waitpid(wolf->childs[i], NULL, 0);
+		waitpid(wolf->childs[i], &status, 0);
+	if (WIFEXITED(status))
+		exit(WEXITSTATUS(status));
 	ft_free_all(wolf);
 }
 
@@ -70,8 +73,8 @@ void	ft_here_doc(char **arv, char **enpv, t_s_comand *wolf)
 	wolf->file_in = open(".ninja.txt", O_RDONLY, 0644);
 	if (wolf->file_in < 0)
 		ft_putstr_fd("the ninja was discovered", 1);
-	pipex(wolf, arv, enpv, 3);
 	unlink(".ninja.txt");
+	pipex(wolf, arv, enpv, 3);
 }
 
 void	ft_multi_cmd(int arc, char **arv, char **enpv, t_s_comand *wolf)
@@ -85,15 +88,12 @@ void	ft_multi_cmd(int arc, char **arv, char **enpv, t_s_comand *wolf)
 	{
 		send_error(3, arv[1]);
 		free(temp);
-		wolf->file_in = -1;
 	}
-	else
-	{
-		wolf->file_in = open(arv[1], O_RDONLY, 0644);
-		if (wolf->file_in < 0)
-			send_error(0, arv[1]);
-	}
+	wolf->file_in = open(arv[1], O_RDONLY | O_CLOEXEC, 0644);
+	if (wolf->file_in < 0)
+		wolf->file_in = open(".ninja.txt", O_RDONLY | O_CREAT, 0644);
 	wolf->n_com = arc - 3;
+	unlink(".ninja.txt");
 	pipex(wolf, arv, enpv, 2);
 }
 
@@ -110,6 +110,9 @@ int	main(int arc, char **arv, char **enpv)
 			ft_multi_cmd(arc, arv, enpv, &wolf);
 	}
 	else
+	{
 		send_error(2, "insufficient or too many arguments ");
+		return (1);
+	}
 	return (0);
 }
