@@ -6,7 +6,7 @@
 /*   By: alsanche <alsanche@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 22:11:20 by alsanche          #+#    #+#             */
-/*   Updated: 2022/07/06 20:34:24 by alsanche         ###   ########lyon.fr   */
+/*   Updated: 2022/07/09 17:41:30 by alsanche         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ typedef struct s_s_comand
 	int		ar;
 	int		file_in;
 	int		file_out;
+	int		here_doc;
 }	t_s_comand;
 
 /* main_bonus.c */
@@ -66,6 +67,7 @@ void	draw_command(t_s_comand *wolf, char **arv, int x);
 int		ft_strncmp(const char *s1, const char *s2, size_t n);
 char	*str_path(char **enpv);
 char	**find_path(char **enpv);
+void	selec_out_file(t_s_comand *wolf, char *arv);
 
 /* split.c */
 

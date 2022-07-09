@@ -6,7 +6,7 @@
 /*   By: alsanche <alsanche@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/21 13:31:09 by alsanche          #+#    #+#             */
-/*   Updated: 2022/07/06 22:12:19 by alsanche         ###   ########lyon.fr   */
+/*   Updated: 2022/07/09 18:31:23 by alsanche         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,7 @@ void	init_childs(t_s_comand *wolf, char **cmd, int i, char *arv)
 	{
 		if (i + 1 == wolf->n_com)
 		{	
-			wolf->file_out = open(arv, O_RDWR | O_CREAT | O_TRUNC, 0644);
-			if (wolf->file_out < 0)
-				send_error(0, arv);
+			selec_out_file(wolf, arv);
 		}
 		else
 			wolf->file_out = fd[FD_W];
@@ -63,18 +61,29 @@ void	pipex(t_s_comand *wolf, char **arv, char **enpv, int x)
 }
 
 void	ft_here_doc(char **arv, char **enpv, t_s_comand *wolf)
-{
-	wolf->file_in = open(".ninja.txt", O_RDWR | O_CREAT, 0644);
-	if (wolf->file_in < 0)
-		ft_putstr_fd("the ninja was discovered", 1);
-	ft_take_msn(arv[2], wolf);
-	wolf->n_com = wolf->ar - 4;
-	close(wolf->file_in);
-	wolf->file_in = open(".ninja.txt", O_RDONLY, 0644);
-	if (wolf->file_in < 0)
-		ft_putstr_fd("the ninja was discovered", 1);
-	unlink(".ninja.txt");
-	pipex(wolf, arv, enpv, 3);
+{	
+	int		here[2];
+	pid_t	child;
+
+	pipe(here);
+	child = fork();
+	if (child < 0 || here[FD_R] < 0)
+		send_error(2, "here_doc");
+	wolf->file_in = here[FD_W];
+	wolf->file_out = here[FD_R];
+	if (child == 0)
+	{
+		ft_take_msn(arv[2], wolf);
+	}
+	else
+	{
+		waitpid(child, NULL, 0);
+		close(here[FD_W]);
+		wolf->file_in = here[FD_R];
+		wolf->n_com = wolf->ar - 4;
+		wolf->here_doc = 1;
+		pipex(wolf, arv, enpv, 3);
+	}
 }
 
 void	ft_multi_cmd(int arc, char **arv, char **enpv, t_s_comand *wolf)
@@ -89,11 +98,12 @@ void	ft_multi_cmd(int arc, char **arv, char **enpv, t_s_comand *wolf)
 		send_error(3, arv[1]);
 		free(temp);
 	}
-	wolf->file_in = open(arv[1], O_RDONLY | O_CLOEXEC, 0644);
+	wolf->file_in = open(arv[1], O_RDONLY, 0644);
 	if (wolf->file_in < 0)
 		wolf->file_in = open(".ninja.txt", O_RDONLY | O_CREAT, 0644);
 	wolf->n_com = arc - 3;
 	unlink(".ninja.txt");
+	wolf->here_doc = 0;
 	pipex(wolf, arv, enpv, 2);
 }
 

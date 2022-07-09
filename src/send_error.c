@@ -21,7 +21,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 
 	if (!s1 || !s2)
 		return (NULL);
-	size = (ft_strlen(s1) + ft_strlen(s2));
+	size = (ft_len(s1) + ft_len(s2));
 	new = (char *)malloc(size + 1);
 	if (!new)
 		return (NULL);
@@ -41,18 +41,36 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	return (new);
 }
 
-void	ft_free_all(char **str)
+void	ft_free_c(char **str)
 {
 	int	i;
 
 	i = 0;
 	while (str[i] != NULL)
 		i++;
-	while (str[i--])
+	while (i--)
 	{
 		free(str[i]);
 	}
 	free(str);
+}
+
+void	ft_free_all(t_s_comand *wolf)
+{
+	int	i;
+
+	i = 0;
+	wolf->ar = 0;
+	while (i < wolf->n_com)
+		i++;
+	while (i-- > 0)
+	{
+		ft_free_c(wolf->command[i]);
+	}
+	free(wolf->command);
+	if (wolf->path != NULL)
+		ft_free_c(wolf->path);
+	wolf->n_com = 0;
 }
 
 void	send_error(int n, char *str)
@@ -63,7 +81,7 @@ void	send_error(int n, char *str)
 	{	
 		temp = ft_strjoin("zsh: permission denied: ", str);
 		ft_putstr_fd(temp, 1);
-		free(temp);
+		exit (EXIT_SUCCESS);
 	}
 	else if (n == 1)
 	{
@@ -83,40 +101,12 @@ void	send_error(int n, char *str)
 	free(temp);
 }
 
-char	*str_path(char **enpv)
+size_t	ft_len(const char *c)
 {
 	int	i;
 
 	i = 0;
-	if (*enpv == NULL || !enpv)
-		exit (127);
-	while (enpv[i])
-	{
-		if (enpv[i][0] == 'P' && enpv[i][1] == 'A'
-			&& enpv[i][2] == 'T' && enpv[i][3] == 'H')
-			return (enpv[i]);
+	while (c[i])
 		i++;
-	}
-	return (NULL);
-}
-
-char	**find_path(char **enpv)
-{
-	char	**gps;
-	char	*path;
-	char	*aux;
-	int		i;
-
-	path = str_path(enpv);
-	if (!path)
-		send_error(1, "PATH");
-	i = -1;
-	gps = ft_split(path, ':');
-	while (gps[++i])
-	{
-		aux = gps[i];
-		gps[i] = ft_strjoin(aux, "/");
-		free(aux);
-	}
-	return (gps);
+	return (i);
 }

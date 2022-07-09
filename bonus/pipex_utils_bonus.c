@@ -6,7 +6,7 @@
 /*   By: alsanche <alsanche@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/14 18:44:01 by alsanche          #+#    #+#             */
-/*   Updated: 2022/07/06 22:36:31 by alsanche         ###   ########lyon.fr   */
+/*   Updated: 2022/07/09 18:08:54 by alsanche         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,23 +24,29 @@ void	ft_putstr_fd(char *s, int fd)
 		write(fd, &s[i], 1);
 		i++;
 	}
-	write(1, "\n", 1);
 }
 
 void	ft_take_msn(char *std, t_s_comand *wolf)
 {
 	char	*temp;
-	char	*limit;
+	int		len;
 
-	limit = ft_strjoin(std, "\n");
-	while (limit)
+	len = ft_len(std);
+	close (wolf->file_out);
+	while (1)
 	{
+		ft_putstr_fd("pipex_alsanche heredoc> ", 1);
 		temp = get_next_line(STDIN_FILENO);
-		if (!ft_strncmp(temp, limit, ft_len(limit)))
-		{	
+		if (!temp)
+		{
+			close (wolf->file_in);
+			exit (1);
+		}
+		if (!ft_strncmp(temp, std, len) && temp[len] == '\n')
+		{
+			close (wolf->file_in);
 			free(temp);
-			free(limit);
-			break ;
+			exit (0);
 		}
 		ft_putstr_fd(temp, wolf->file_in);
 		free(temp);
@@ -62,6 +68,8 @@ void	ft_run(int *fd, char **comand, t_s_comand *wolf)
 	dup2(wolf->file_in, STDIN_FILENO);
 	close(wolf->file_in);
 	i = 0;
+	if (!access(comand[0], X_OK))
+		ft_test(wolf->file_out, comand[0], comand, wolf->empv);
 	while (wolf->path != NULL && wolf->path[i])
 	{
 		gps = ft_strjoin(wolf->path[i], comand[0]);

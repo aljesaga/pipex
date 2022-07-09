@@ -6,7 +6,7 @@
 /*   By: alsanche <alsanche@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/30 16:01:55 by alsanche          #+#    #+#             */
-/*   Updated: 2022/07/05 14:34:50 by alsanche         ###   ########lyon.fr   */
+/*   Updated: 2022/07/09 17:42:00 by alsanche         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,4 +74,14 @@ char	**find_path(char **enpv)
 		free(aux);
 	}
 	return (gps);
+}
+
+void	selec_out_file(t_s_comand *wolf, char *arv)
+{
+	if (wolf->here_doc == 1)
+		wolf->file_out = open(arv, O_RDWR | O_CREAT | O_APPEND, 0644);
+	else
+		wolf->file_out = open(arv, O_RDWR | O_CREAT | O_TRUNC, 0644);
+	if (wolf->file_out < 0)
+		send_error(0, arv);
 }

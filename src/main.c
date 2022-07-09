@@ -6,119 +6,110 @@
 /*   By: alsanche <alsanche@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/21 13:31:09 by alsanche          #+#    #+#             */
-/*   Updated: 2022/07/05 13:48:28 by alsanche         ###   ########lyon.fr   */
+/*   Updated: 2022/07/09 15:03:06 by alsanche         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-void	ft_test(int fd, char *path, char **comand, char **enpv)
-{
-	dup2(fd, STDOUT_FILENO);
-	execve(path, comand, enpv);
-}
-
-void	ft_romulo(int *fd, int file, char *comand, char **enpv)
-{
-	char	**romulo;
-	char	**path;
-	char	*gps;
-	int		i;
-
-	close(fd[FD_W]);
-	dup2(fd[FD_R], STDIN_FILENO);
-	romulo = ft_split(comand, ' ');
-	path = find_path(enpv);
-	i = 0;
-	while (path[i])
-	{
-		gps = ft_strjoin(path[i], romulo[0]);
-		if (!access(gps, R_OK))
-			ft_test(file, gps, romulo, enpv);
-		free(gps);
-		i++;
-	}
-	send_error(1, comand);
-	ft_free_all(romulo);
-	ft_free_all(path);
-	close(fd[FD_R]);
-	exit (-1);
-}
-
-void	ft_remo(int *fd, int file, char *comand, char **enpv)
-{
-	char	**remo;
-	char	**path;
-	char	*gps;
-	int		i;
-
-	close(fd[FD_R]);
-	dup2(file, STDIN_FILENO);
-	close(file);
-	remo = ft_split(comand, ' ');
-	path = find_path(enpv);
-	i = 0;
-	while (path[i])
-	{
-		gps = ft_strjoin(path[i], remo[0]);
-		if (!access(gps, R_OK))
-			ft_test(fd[FD_W], gps, remo, enpv);
-		free(gps);
-		i++;
-	}
-	send_error(1, comand);
-	ft_free_all(remo);
-	ft_free_all(path);
-	close(fd[FD_W]);
-	exit (-1);
-}
-
-void	pipex(int *file, char **arv, char **enpv)
-{
+void	init_childs(t_s_comand *wolf, char **cmd, int i, char *arv)
+{	
+	pid_t	pid;
 	int		fd[2];
-	pid_t	child;
 
-	file[1] = open(arv[4], O_RDWR | O_CREAT | O_TRUNC, 0644);
-	if (file[1] < 0)
-		send_error(0, arv[4]);
 	pipe(fd);
-	child = fork();
-	if (child == -1)
+	pid = fork();
+	if (pid != 0)
+		wolf->childs[i] = pid;
+	else if (pid == -1)
 		send_error(2, "fork");
-	if (child == 0)
-		ft_remo(fd, file[0], arv[2], enpv);
 	else
 	{
-		ft_romulo(fd, file[1], arv[3], enpv);
+		if (i + 1 == wolf->n_com)
+		{	
+			wolf->file_out = open(arv, O_RDWR | O_CREAT | O_TRUNC, 0644);
+			if (wolf->file_out < 0)
+				send_error(0, arv);
+		}
+		else
+			wolf->file_out = fd[FD_W];
+		ft_run(fd, cmd, wolf);
 	}
-	wait(&child);
-	close(file[1]);
+	close(fd[FD_W]);
+	close(wolf->file_in);
+	wolf->file_in = fd[FD_R];
+}
+
+void	pipex(t_s_comand *wolf, char **arv, char **enpv, int x)
+{
+	int	i;
+	int	status;
+
+	wolf->path = find_path(enpv);
+	wolf->empv = enpv;
+	draw_command(wolf, arv, x);
+	wolf->childs = malloc(sizeof(pid_t *) * wolf->n_com);
+	if (!wolf->childs)
+		send_error(0, "children not found");
+	i = -1;
+	while (++i < wolf->n_com)
+		init_childs(wolf, wolf->command[i], i, arv[wolf->ar - 1]);
+	i = -1;
+	while (++i < wolf->n_com)
+		waitpid(wolf->childs[i], &status, 0);
+	if (WIFEXITED(status))
+		exit(WEXITSTATUS(status));
+	ft_free_all(wolf);
+}
+
+void	ft_multi_cmd(int arc, char **arv, char **enpv, t_s_comand *wolf)
+{
+	char	*temp;
+
+	temp = arv[1];
+	if (temp[0] != '/')
+		temp = ft_strjoin("./", arv[1]);
+	if (access(temp, F_OK))
+	{
+		send_error(3, arv[1]);
+		free(temp);
+	}
+	wolf->file_in = open(arv[1], O_RDONLY, 0644);
+	if (wolf->file_in < 0)
+		wolf->file_in = open(".ninja.txt", O_RDONLY | O_CREAT, 0644);
+	wolf->n_com = arc - 3;
+	unlink(".ninja.txt");
+	pipex(wolf, arv, enpv, 2);
+}
+
+void	ft_putstr_fd(char *s, int fd)
+{
+	int		i;
+
+	i = 0;
+	if (!fd || !s)
+		return ;
+	while (s[i])
+	{
+		write(fd, &s[i], 1);
+		i++;
+	}
+	write(1, "\n", 1);
 }
 
 int	main(int arc, char **arv, char **enpv)
 {
-	int		file[2];
-	char	*temp;
+	t_s_comand	wolf;
 
 	if (arc == 5)
 	{
-		temp = arv[1];
-		if (arv[1][0] != '/')
-			temp = ft_strjoin("./", arv[1]);
-		if (access(temp, F_OK))
-		{
-			send_error(3, arv[1]);
-			free(temp);
-		}
-		else
-		{
-			file[0] = open(arv[1], O_RDONLY, 0644);
-			if (file[0] == -1)
-				send_error(0, arv[1]);
-		}
-		pipex(file, arv, enpv);
+		wolf.ar = arc;
+		ft_multi_cmd(arc, arv, enpv, &wolf);
 	}
 	else
+	{
 		send_error(2, "insufficient or too many arguments ");
+		return (1);
+	}
 	return (0);
 }
