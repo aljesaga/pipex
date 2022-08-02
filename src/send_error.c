@@ -77,25 +77,26 @@ void	send_error(int n, char *str)
 {
 	char	*temp;
 
+	ft_putstr_fd("pipex: ", 1);
 	if (n == 0)
 	{	
-		temp = ft_strjoin("zsh: permission denied: ", str);
+		temp = ft_strjoin(str, ": permission denied\n");
 		ft_putstr_fd(temp, 1);
-		exit (EXIT_SUCCESS);
+		exit (1);
 	}
 	else if (n == 1)
 	{
-		temp = ft_strjoin("zsh: command not found: ", str);
+		temp = ft_strjoin(str, ": command not found\n");
 		ft_putstr_fd(temp, 1);
 	}
 	else if (n == 2)
 	{
-		temp = ft_strjoin(str, " it doesn't work");
+		temp = ft_strjoin(str, " it doesn't work\n");
 		ft_putstr_fd(temp, 1);
 	}
 	else
 	{
-		temp = ft_strjoin("zsh: no such file or directory: ", str);
+		temp = ft_strjoin(str, ": no such file or directory\n");
 		ft_putstr_fd(temp, 1);
 	}
 	free(temp);

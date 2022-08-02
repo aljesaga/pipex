@@ -6,7 +6,7 @@
 /*   By: alsanche <alsanche@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/21 13:31:09 by alsanche          #+#    #+#             */
-/*   Updated: 2022/07/09 18:31:23 by alsanche         ###   ########lyon.fr   */
+/*   Updated: 2022/07/10 14:54:40 by alsanche         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,7 @@ void	init_childs(t_s_comand *wolf, char **cmd, int i, char *arv)
 	else
 	{
 		if (i + 1 == wolf->n_com)
-		{	
 			selec_out_file(wolf, arv);
-		}
 		else
 			wolf->file_out = fd[FD_W];
 		ft_run(fd, cmd, wolf);
@@ -121,7 +119,7 @@ int	main(int arc, char **arv, char **enpv)
 	}
 	else
 	{
-		send_error(2, "insufficient or too many arguments ");
+		send_error(2, "insufficient arguments");
 		return (1);
 	}
 	return (0);

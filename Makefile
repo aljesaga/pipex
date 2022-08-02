@@ -6,7 +6,7 @@
 #    By: alsanche <alsanche@student.42lyon.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/27 16:00:21 by alsanche          #+#    #+#              #
-#    Updated: 2022/07/09 14:36:05 by alsanche         ###   ########lyon.fr    #
+#    Updated: 2022/07/10 15:29:21 by alsanche         ###   ########lyon.fr    #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,7 +28,7 @@ CC = gcc
 DEBUG = -fsanitize=address -g3
 
 CFLAGS = -Wall -Wextra -Werror 
-##CFLAGS += $(DEBUG)
+#CFLAGS += $(DEBUG)
 
 all: $(NAME)
 
